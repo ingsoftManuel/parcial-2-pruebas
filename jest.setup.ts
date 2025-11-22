@@ -1,4 +1,4 @@
- // Cargar variables de entorno desde .env antes de cualquier cosa
+// Cargar variables de entorno desde .env antes de cualquier cosa
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 

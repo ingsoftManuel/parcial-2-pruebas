@@ -3,6 +3,9 @@ import { createApp } from '../../src/app';
 import { DatabaseConfig } from '../../src/config/database';
 import { Application } from 'express';
 
+// Configurar nombre de base de datos para pruebas de integración
+process.env.DB_NAME = process.env.DB_NAME || 'parcial_pruebas_test';
+
 describe('API Integration Tests', () => {
   let app: Application;
 
