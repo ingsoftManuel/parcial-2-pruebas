@@ -1,24 +1,26 @@
- import { UserService } from '../../src/services/UserService';
+import { UserService } from '../../src/services/UserService';
 import { Pool } from 'pg';
 
 describe('UserService - Unit Tests', () => {
   let userService: UserService;
-  let mockPool: jest.Mocked<Pool>;
+  let mockPool: any;
 
   beforeEach(() => {
     mockPool = {
       query: jest.fn(),
-    } as unknown as jest.Mocked<Pool>;
+    };
 
-    userService = new UserService(mockPool);
+    userService = new UserService(mockPool as Pool);
   });
 
   describe('createUser', () => {
     it('should create a user successfully', async () => {
       const mockUser = { name: 'John Doe', email: 'john@example.com' };
-      const mockResult = { rows: [{ id: 1, ...mockUser }], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      
+      mockPool.query.mockResolvedValue({
+        rows: [{ id: 1, ...mockUser }],
+        rowCount: 1
+      });
 
       const result = await userService.createUser(mockUser);
 
@@ -42,9 +44,11 @@ describe('UserService - Unit Tests', () => {
   describe('getUserById', () => {
     it('should return user when found', async () => {
       const mockUser = { id: 1, name: 'John Doe', email: 'john@example.com' };
-      const mockResult = { rows: [mockUser], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      
+      mockPool.query.mockResolvedValue({
+        rows: [mockUser],
+        rowCount: 1
+      });
 
       const result = await userService.getUserById(1);
 
@@ -56,9 +60,10 @@ describe('UserService - Unit Tests', () => {
     });
 
     it('should return null when user not found', async () => {
-      const mockResult = { rows: [], rowCount: 0 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 0
+      });
 
       const result = await userService.getUserById(999);
 
@@ -72,9 +77,11 @@ describe('UserService - Unit Tests', () => {
         { id: 1, name: 'John Doe', email: 'john@example.com' },
         { id: 2, name: 'Jane Doe', email: 'jane@example.com' }
       ];
-      const mockResult = { rows: mockUsers, rowCount: 2 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      
+      mockPool.query.mockResolvedValue({
+        rows: mockUsers,
+        rowCount: 2
+      });
 
       const result = await userService.getAllUsers();
 
@@ -85,9 +92,10 @@ describe('UserService - Unit Tests', () => {
 
   describe('deleteUser', () => {
     it('should delete user successfully', async () => {
-      const mockResult = { rows: [], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 1
+      });
 
       const result = await userService.deleteUser(1);
 
@@ -99,9 +107,10 @@ describe('UserService - Unit Tests', () => {
     });
 
     it('should return false when user not found', async () => {
-      const mockResult = { rows: [], rowCount: 0 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 0
+      });
 
       const result = await userService.deleteUser(999);
 

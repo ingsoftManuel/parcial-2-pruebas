@@ -1,16 +1,16 @@
- import { TaskService } from '../../src/services/TaskService';
+import { TaskService } from '../../src/services/TaskService';
 import { Pool } from 'pg';
 
 describe('TaskService - Unit Tests', () => {
   let taskService: TaskService;
-  let mockPool: jest.Mocked<Pool>;
+  let mockPool: any;
 
   beforeEach(() => {
     mockPool = {
       query: jest.fn(),
-    } as unknown as jest.Mocked<Pool>;
+    };
 
-    taskService = new TaskService(mockPool);
+    taskService = new TaskService(mockPool as Pool);
   });
 
   describe('createTask', () => {
@@ -21,9 +21,11 @@ describe('TaskService - Unit Tests', () => {
         is_completed: false,
         user_id: 1
       };
-      const mockResult = { rows: [{ id: 1, ...mockTask }], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      
+      mockPool.query.mockResolvedValue({
+        rows: [{ id: 1, ...mockTask }],
+        rowCount: 1
+      });
 
       const result = await taskService.createTask(mockTask);
 
@@ -38,9 +40,11 @@ describe('TaskService - Unit Tests', () => {
         { id: 1, title: 'Task 1', description: 'Desc 1', is_completed: false, user_id: 1 },
         { id: 2, title: 'Task 2', description: 'Desc 2', is_completed: true, user_id: 1 }
       ];
-      const mockResult = { rows: mockTasks, rowCount: 2 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      
+      mockPool.query.mockResolvedValue({
+        rows: mockTasks,
+        rowCount: 2
+      });
 
       const result = await taskService.getTasksByUserId(1);
 
@@ -49,9 +53,10 @@ describe('TaskService - Unit Tests', () => {
     });
 
     it('should return empty array when no tasks found', async () => {
-      const mockResult = { rows: [], rowCount: 0 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 0
+      });
 
       const result = await taskService.getTasksByUserId(999);
 
@@ -61,9 +66,10 @@ describe('TaskService - Unit Tests', () => {
 
   describe('updateTaskStatus', () => {
     it('should update task status successfully', async () => {
-      const mockResult = { rows: [], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 1
+      });
 
       const result = await taskService.updateTaskStatus(1, true);
 
@@ -75,9 +81,10 @@ describe('TaskService - Unit Tests', () => {
     });
 
     it('should return false when task not found', async () => {
-      const mockResult = { rows: [], rowCount: 0 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 0
+      });
 
       const result = await taskService.updateTaskStatus(999, true);
 
@@ -87,9 +94,10 @@ describe('TaskService - Unit Tests', () => {
 
   describe('deleteTask', () => {
     it('should delete task successfully', async () => {
-      const mockResult = { rows: [], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 1
+      });
 
       const result = await taskService.deleteTask(1);
 
@@ -99,10 +107,18 @@ describe('TaskService - Unit Tests', () => {
 
   describe('getTaskById', () => {
     it('should return task when found', async () => {
-      const mockTask = { id: 1, title: 'Task', description: 'Desc', is_completed: false, user_id: 1 };
-      const mockResult = { rows: [mockTask], rowCount: 1 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      const mockTask = { 
+        id: 1, 
+        title: 'Task', 
+        description: 'Desc', 
+        is_completed: false, 
+        user_id: 1 
+      };
+      
+      mockPool.query.mockResolvedValue({
+        rows: [mockTask],
+        rowCount: 1
+      });
 
       const result = await taskService.getTaskById(1);
 
@@ -110,9 +126,10 @@ describe('TaskService - Unit Tests', () => {
     });
 
     it('should return null when task not found', async () => {
-      const mockResult = { rows: [], rowCount: 0 };
-
-      mockPool.query.mockResolvedValue(mockResult as any);
+      mockPool.query.mockResolvedValue({
+        rows: [],
+        rowCount: 0
+      });
 
       const result = await taskService.getTaskById(999);
 
