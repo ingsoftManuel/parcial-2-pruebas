@@ -3,15 +3,22 @@ import { createApp } from '../../src/app';
 import { DatabaseConfig } from '../../src/config/database';
 import { Application } from 'express';
 
-// Configurar nombre de base de datos para pruebas E2E
-process.env.DB_NAME = process.env.DB_NAME || 'parcial_pruebas_e2e';
+// FORZAR configuración para E2E en CI
+if (process.env.CI || process.env.GITHUB_ACTIONS) {
+  process.env.DB_USER = 'postgres';
+  process.env.DB_HOST = 'localhost';
+  process.env.DB_NAME = 'parcial_pruebas_e2e';
+  process.env.DB_PASSWORD = 'postgres';
+  process.env.DB_PORT = '5432';
+} else {
+  // Local: usar variables de entorno o defaults
+  process.env.DB_NAME = process.env.DB_NAME || 'parcial_pruebas_e2e';
+}
 
 describe('E2E - Complete User Flow', () => {
   let app: Application;
 
   beforeAll(async () => {
-    process.env.DB_NAME = 'parcial_pruebas_e2e';
-    process.env.DB_PASSWORD = 'eventia_pass';
     await DatabaseConfig.ensureInitialized();
     app = createApp();
     

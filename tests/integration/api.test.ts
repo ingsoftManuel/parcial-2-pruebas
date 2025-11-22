@@ -3,8 +3,17 @@ import { createApp } from '../../src/app';
 import { DatabaseConfig } from '../../src/config/database';
 import { Application } from 'express';
 
-// Configurar nombre de base de datos para pruebas de integración
-process.env.DB_NAME = process.env.DB_NAME || 'parcial_pruebas_test';
+// FORZAR configuración para Integration tests en CI
+if (process.env.CI || process.env.GITHUB_ACTIONS) {
+  process.env.DB_USER = 'postgres';
+  process.env.DB_HOST = 'localhost';
+  process.env.DB_NAME = 'parcial_pruebas_test';
+  process.env.DB_PASSWORD = 'postgres';
+  process.env.DB_PORT = '5432';
+} else {
+  // Local: usar variables de entorno o defaults
+  process.env.DB_NAME = process.env.DB_NAME || 'parcial_pruebas_test';
+}
 
 describe('API Integration Tests', () => {
   let app: Application;
@@ -43,9 +52,16 @@ describe('API Integration Tests', () => {
     });
 
     it('should return 409 when email already exists', async () => {
+      // Primero crear el usuario
       await request(app)
         .post('/api/users')
-        .send({ name: 'Duplicate', email: 'jane@example.com' })
+        .send({ name: 'First User', email: 'duplicate409@example.com' })
+        .expect(201);
+
+      // Luego intentar crear otro con el mismo email
+      await request(app)
+        .post('/api/users')
+        .send({ name: 'Duplicate', email: 'duplicate409@example.com' })
         .expect(409);
     });
 
