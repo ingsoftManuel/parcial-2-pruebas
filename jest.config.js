@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>'],
   testMatch: ['**/tests/**/*.test.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       tsconfig: 'tsconfig.test.json'
@@ -21,6 +22,5 @@ module.exports = {
       statements: 70
     }
   },
-  testTimeout: 30000,
-  moduleDirectories: ['node_modules', 'src']
+  testTimeout: 30000
 };

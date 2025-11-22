@@ -1,4 +1,4 @@
- import request from 'supertest';
+import request from 'supertest';
 import { createApp } from '../../src/app';
 import { DatabaseConfig } from '../../src/config/database';
 import { Application } from 'express';
@@ -7,8 +7,6 @@ describe('API Integration Tests', () => {
   let app: Application;
 
   beforeAll(async () => {
-    process.env.DB_NAME = 'parcial_pruebas_test';
-    process.env.DB_PASSWORD = 'eventia_pass';
     app = createApp();
     
     // Limpiar base de datos antes de las pruebas

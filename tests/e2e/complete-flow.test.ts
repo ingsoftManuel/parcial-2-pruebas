@@ -1,4 +1,4 @@
- import request from 'supertest';
+import request from 'supertest';
 import { createApp } from '../../src/app';
 import { DatabaseConfig } from '../../src/config/database';
 import { Application } from 'express';
