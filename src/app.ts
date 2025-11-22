@@ -1,4 +1,4 @@
- import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import { DatabaseConfig } from './config/database';
 import { UserService } from './services/UserService';
@@ -29,7 +29,7 @@ export function createApp(): Application {
   app.use('/api/tasks', createTaskRoutes(taskController));
 
   // Health check
-  app.get('/health', (_req, res) => {
+  app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
   });
 

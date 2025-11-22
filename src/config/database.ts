@@ -2,6 +2,7 @@ import { Pool, PoolConfig } from 'pg';
 
 export class DatabaseConfig {
   private static pool: Pool;
+  private static initialized: boolean = false;
 
   public static getPool(): Pool {
     if (!DatabaseConfig.pool) {
@@ -14,13 +15,16 @@ export class DatabaseConfig {
       };
 
       DatabaseConfig.pool = new Pool(config);
-      DatabaseConfig.initialize();
     }
     return DatabaseConfig.pool;
   }
 
-  private static async initialize(): Promise<void> {
-    const pool = DatabaseConfig.pool;
+  public static async ensureInitialized(): Promise<void> {
+    if (DatabaseConfig.initialized) {
+      return;
+    }
+
+    const pool = DatabaseConfig.getPool();
 
     try {
       await pool.query(`
@@ -42,15 +46,18 @@ export class DatabaseConfig {
         )
       `);
 
-      console.log('✅ Database tables initialized');
+      DatabaseConfig.initialized = true;
+      console.log('Database tables initialized');
     } catch (error) {
-      console.error('❌ Error initializing database:', error);
+      console.error('Error initializing database:', error);
+      throw error;
     }
   }
 
   public static async close(): Promise<void> {
     if (DatabaseConfig.pool) {
       await DatabaseConfig.pool.end();
+      DatabaseConfig.initialized = false;
     }
   }
 }

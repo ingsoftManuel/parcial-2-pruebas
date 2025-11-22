@@ -10,6 +10,7 @@ describe('API Integration Tests', () => {
   let app: Application;
 
   beforeAll(async () => {
+    await DatabaseConfig.ensureInitialized();
     app = createApp();
     
     // Limpiar base de datos antes de las pruebas

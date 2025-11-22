@@ -12,6 +12,7 @@ describe('E2E - Complete User Flow', () => {
   beforeAll(async () => {
     process.env.DB_NAME = 'parcial_pruebas_e2e';
     process.env.DB_PASSWORD = 'eventia_pass';
+    await DatabaseConfig.ensureInitialized();
     app = createApp();
     
     // Limpiar base de datos
