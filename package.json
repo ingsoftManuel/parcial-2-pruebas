@@ -2,13 +2,13 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "npx ts-node src/index.ts",
     "test": "jest --coverage",
-    "test:unit": "jest --testPathPattern=unit",
-    "test:integration": "jest --testPathPattern=integration",
-    "test:e2e": "jest --testPathPattern=e2e",
-    "lint": "echo Skipping lint for now",
-    "lint:fix": "echo Skipping lint for now"
+    "test:unit": "jest tests/unit --coverage=false",
+    "test:integration": "jest tests/integration --coverage=false",
+    "test:e2e": "jest tests/e2e --coverage=false",
+    "lint": "npx eslint src/**/*.ts tests/**/*.ts || exit 0",
+    "lint:fix": "npx eslint src/**/*.ts tests/**/*.ts --fix"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
